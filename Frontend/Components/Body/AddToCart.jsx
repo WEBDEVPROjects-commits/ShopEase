@@ -14,7 +14,7 @@ function AddToCart() {
             return (
               <div
                 className="bg-white shadow-md rounded-2xl p-5 mb-5 mt-3 flex justify-between items-center border border-zinc-200 hover:shadow-lg transition-all duration-300"
-                key={CartItem.id}
+                key={CartItem._id}
               >
                 <div className="flex gap-5 items-center">
                   <img

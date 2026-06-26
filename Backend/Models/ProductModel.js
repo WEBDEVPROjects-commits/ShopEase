@@ -1,5 +1,7 @@
 const mongoose=require('mongoose');
-mongoose.connect("mongodb://localhost:27017/ShopEase")
+mongoose.connect("mongodb://localhost:27017/ShopEase").then(()=>{
+    console.log("MongoDB connected")
+})
 const ProductSchema=mongoose.Schema({
     title:{
         type:String,

@@ -24,8 +24,6 @@ function Header() {
     setCurrentSearch,
     SearchedProducts,
     setSearchedProducts,
-    FilteredProducts,
-    setFilteredProducts,
     SearchBy,
     setSearchBy,
   } = useContext(homeContext);
@@ -79,7 +77,6 @@ function Header() {
             className="text-lg text-gray-500 cursor-pointer hover:text-green-600"
             onClick={(e) => {
               navigate("/SearchedProducts");
-              setFilteredProducts(SearchedProducts);
             }}
           />
 
@@ -135,8 +132,9 @@ function Header() {
           </div>
 
           {/* Cart */}
-          <Link
-            to="/AddToCart"
+          <div onClick={(e) => {
+            navigate("/AddToCart") 
+          }}
             className="relative flex items-center justify-center"
           >
             <FiShoppingCart className="text-3xl text-gray-700 hover:text-green-600 transition-all" />
@@ -144,7 +142,7 @@ function Header() {
             <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
               {CartItems.length}
             </span>
-          </Link>
+          </div>
         </div>
       </div>
     </>

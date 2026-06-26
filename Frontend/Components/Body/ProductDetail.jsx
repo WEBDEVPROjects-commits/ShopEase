@@ -5,7 +5,7 @@ import { useContext } from "react";
 function ProductDetail() {
     const {id}=useParams();
     const {products,setProducts}=useContext(homeContext)
-    const shownItem=products.find((element) => element.id===Number(id))
+    const shownItem=products.find((element) => element._id===id)
     console.log(shownItem)
   return (
     <div>
@@ -19,7 +19,7 @@ function ProductDetail() {
           <img
             src={shownItem.image}
             alt="KuchBhi"
-            className="w-[400px] h-[400px] object-contain rounded-xl"
+            className="w-100 h-100 object-contain rounded-xl"
           />
         </div>
 

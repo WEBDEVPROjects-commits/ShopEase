@@ -10,38 +10,40 @@ import ProductDetail from "../Components/Body/ProductDetail"
 import SearchedProductss from "../Components/Body/SearchedProducts";
 
 function App() {
-  const [products, setProducts] = useState(
-    JSON.parse(localStorage.getItem("data")) || [],
-  );
+  const [products, setProducts] = useState([]);
   // console.log(products)
   const [loading, setLoading] = useState(true);
-  const [CartItems,setCartItems]=useState(JSON.parse(localStorage.getItem("CartItems")) || []);
+  const [CartItems,setCartItems]=useState([]);
   const [currentSearch,setCurrentSearch]=useState("");
   const [OrderedItems,setOrderedItems]=useState(JSON.parse(localStorage.getItem("OrderedItems"))||[]);
   const [completedOrder,setCompletedOrder]=useState(false);
   const [OrderDropId,setOrderDropId]=useState([]);
   const [SearchedProducts,setSearchedProducts]=useState(JSON.parse(localStorage.getItem("SearchedProducts"))||[]);
   const [SearchBy, setSearchBy] = useState("title");
-  const [FilteredProducts,setFilteredProducts]=useState(JSON.parse(localStorage.getItem("FilteredProducts"))||[])
+ 
   useEffect(() => {
-    localStorage.setItem("data", JSON.stringify(products));
-    localStorage.setItem("CartItems", JSON.stringify(CartItems));
     localStorage.setItem("OrderedItems",JSON.stringify(OrderedItems))
     localStorage.setItem("SearchedProducts",JSON.stringify(SearchedProducts))
-    localStorage.setItem("FilteredProducts",JSON.stringify(FilteredProducts))
-    console.log(products);
-  }, [products,CartItems,OrderedItems,SearchedProducts,FilteredProducts]);
 
+  }, [products,CartItems,OrderedItems,SearchedProducts]);
+
+  async function fetchProducts() {
+    const response = await fetch("http://localhost:3000/api/Products");
+    const data = await response.json();
+    console.log(data)
+    setProducts(data.products);
+    setLoading(false);
+  }
+  async function CartProducts(){
+    const response=await fetch("http://localhost:3000/api/getCartProducts")
+    const data=await response.json();
+    setCartItems(data.CartProducts)
+  }
   useEffect(() => {
     try {
-      async function fetchData() {
-        const response = await fetch("https://fakestoreapi.com/products");
-        const data = await response.json();
-        // console.log(products)
-        setLoading(false);
-        setProducts(data);
-      }
-      fetchData();
+      fetchProducts();
+      CartProducts();
+      
     } catch (err) {
       console.log(err);
     }
@@ -50,7 +52,7 @@ function App() {
     <>
       <div className="h-screen">
         <homeContext.Provider
-          value={{ products,setProducts,CartItems,setCartItems,currentSearch,setCurrentSearch,OrderedItems,setOrderedItems,completedOrder,setCompletedOrder,OrderDropId,setOrderDropId,SearchedProducts,setSearchedProducts,FilteredProducts,setFilteredProducts,SearchBy, setSearchBy}}
+          value={{ products,setProducts,loading, setLoading,CartItems,setCartItems,currentSearch,setCurrentSearch,OrderedItems,setOrderedItems,completedOrder,setCompletedOrder,OrderDropId,setOrderDropId,SearchedProducts,setSearchedProducts,SearchBy, setSearchBy}}
         >
           <Routes>
               <Route path="/" element={<HomePage/>}></Route>
