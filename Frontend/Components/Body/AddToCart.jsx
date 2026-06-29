@@ -5,12 +5,48 @@ import Header from "../Header/Header";
 function AddToCart() {
   const { products, CartItems, setCartItems } = useContext(homeContext);
   console.log(CartItems);
+
   return (
     <>
       <div>
-        <Header/>
+        <Header />
         {CartItems.length !== 0 ? (
           CartItems.map((CartItem) => {
+
+               const UpdateInCart=async () => {
+                      const resp=await fetch("http://localhost:3000/api/UpdateCartProduct",{
+                        method:"PATCH",
+                        headers:{
+                          "Content-Type":"application/json",
+                        },
+                        body:JSON.stringify({
+                         _id:CartItem._id
+                        })
+                      })
+                      const resp1=await fetch("http://localhost:3000/api/getCartProducts")
+                      const data1=await resp1.json();
+                      setCartItems(data1.CartProducts);
+            }
+
+            const decreaseProductQuantity = async () => {
+              const resp = await fetch(
+                "http://localhost:3000/api/decreaseProductQuantity",
+                {
+                  method: "PATCH",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    _id: CartItem._id,
+                  }),
+                },
+              );
+              const resp1 = await fetch(
+                "http://localhost:3000/api/getCartProducts",
+              );
+              const data1 = await resp1.json();
+              setCartItems(data1.CartProducts);
+            };
             return (
               <div
                 className="bg-white shadow-md rounded-2xl p-5 mb-5 mt-3 flex justify-between items-center border border-zinc-200 hover:shadow-lg transition-all duration-300"
@@ -35,15 +71,7 @@ function AddToCart() {
                     <div
                       className="cursor-pointer text-xl font-bold text-zinc-700 hover:text-red-500"
                       onClick={(e) => {
-                        setCartItems((prev) => {
-                          return prev.map((item) => {
-                            if (item.id === CartItem.id && item.quantity > 1) {
-                              return { ...item, quantity: item.quantity - 1 };
-                            } else {
-                              return item;
-                            }
-                          });
-                        });
+                          (CartItem.quantity>1) && decreaseProductQuantity();
                       }}
                     >
                       -
@@ -52,15 +80,7 @@ function AddToCart() {
                     <div
                       className="cursor-pointer text-xl font-bold text-zinc-700 hover:text-green-500"
                       onClick={(e) => {
-                        setCartItems((prev) => {
-                          return prev.map((item) => {
-                            if (item.id === CartItem.id && item.quantity > 0) {
-                              return { ...item, quantity: item.quantity + 1 };
-                            } else {
-                              return item;
-                            }
-                          });
-                        });
+                         (CartItem.quantity<8) &&  UpdateInCart();
                       }}
                     >
                       +

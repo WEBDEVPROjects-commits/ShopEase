@@ -52,18 +52,20 @@ function Body() {
             }
           };
           const UpdateInCart=async () => {
-                      const resp=await fetch("http://localhost:3000/UpdateCartProduct",{
+                      const resp=await fetch("http://localhost:3000/api/UpdateCartProduct",{
                         method:"PATCH",
                         headers:{
                           "Content-Type":"application/json",
                         },
                         body:JSON.stringify({
-                         id:product._id
+                         _id:product._id
                         })
                       })
-                      const data=await resp.json();
-                      setCartItems()
-                    }
+                      const resp1=await fetch("http://localhost:3000/api/getCartProducts")
+                      const data1=await resp1.json();
+                      setCartItems(data1.CartProducts);
+            }
+
           return (
             <div
               className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-zinc-200 flex flex-col"
@@ -101,11 +103,10 @@ function Body() {
                   className="mt-auto bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-medium transition-all duration-300"
                   onClick={(e) => {
                     e.stopPropagation();
-
-                    CartItems.map((element) => {
-                       product._id!==element._id?AddToCart():UpdateInCart();
-                    })
                    
+                    const exists=CartItems.some((element) => element._id===product._id )
+                    console.log(exists);
+                    exists?UpdateInCart():AddToCart();
                     
                   }}
                 >
