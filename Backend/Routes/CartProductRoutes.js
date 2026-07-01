@@ -6,6 +6,6 @@ router.get("/getCartProducts",getCartProducts)
 router.post("/addCartProduct",addCartProduct)
 router.patch("/UpdateCartProduct",UpdateCartProduct)
 router.patch("/decreaseProductQuantity",decreaseQuantity)
-router.delete("/deleteCartProduct",DeleteCartProduct)
+router.delete("/DeleteCartProduct",DeleteCartProduct)
 
 module.exports=router

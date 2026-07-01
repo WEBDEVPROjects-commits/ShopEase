@@ -15,6 +15,7 @@ app.use(express.json());
 app.use("/api/User",userRoutes)
 app.use("/api",ProductRoutes)
 app.use("/api",CartProductRoutes)
+// app.use("/api")
 
 app.listen(PORT,()=>{
     console.log("Server running on port " + PORT)

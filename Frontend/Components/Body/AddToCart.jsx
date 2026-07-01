@@ -12,21 +12,32 @@ function AddToCart() {
         <Header />
         {CartItems.length !== 0 ? (
           CartItems.map((CartItem) => {
-
-               const UpdateInCart=async () => {
-                      const resp=await fetch("http://localhost:3000/api/UpdateCartProduct",{
-                        method:"PATCH",
-                        headers:{
-                          "Content-Type":"application/json",
-                        },
-                        body:JSON.stringify({
-                         _id:CartItem._id
-                        })
-                      })
-                      const resp1=await fetch("http://localhost:3000/api/getCartProducts")
-                      const data1=await resp1.json();
-                      setCartItems(data1.CartProducts);
-            }
+            const UpdateInCart = async () => {
+              const resp = await fetch(
+                "http://localhost:3000/api/UpdateCartProduct",
+                {
+                  method: "PATCH",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    _id: CartItem._id,
+                  }),
+                },
+              );
+              const data = await resp.json();
+              setCartItems((prev) => {
+                return prev.filter((element) => {
+                   return (CartItem._id === data.UpdatedProducts._id
+                    ? {
+                        ...element,
+                        quantity: data.UpdatedProducts.quantity,
+                        total: data.UpdatedProducts.total,
+                      }
+                    : element);
+                });
+              });
+            };
 
             const decreaseProductQuantity = async () => {
               const resp = await fetch(
@@ -41,11 +52,36 @@ function AddToCart() {
                   }),
                 },
               );
-              const resp1 = await fetch(
-                "http://localhost:3000/api/getCartProducts",
+              const data = await resp.json();
+              setCartItems((prev) => {
+                return prev.filter((element) => {
+                  return (CartItem._id === data.UpdatedProducts._id
+                    ? {
+                        ...element,
+                        quantity: data.UpdatedProducts.quantity,
+                        total: data.UpdatedProducts.total,
+                      }
+                    : element);
+                });
+              });
+            };
+            const DeleteInCart = async () => {
+              const resp = await fetch(
+                "http://localhost:3000/api/DeleteCartProduct",
+                {
+                  method: "DELETE",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    _id: CartItem._id,
+                  }),
+                },
               );
-              const data1 = await resp1.json();
-              setCartItems(data1.CartProducts);
+              const data=await resp.json();
+              setCartItems((prev) => {
+                return prev.filter((element) => element._id!==CartItem._id);
+              });
             };
             return (
               <div
@@ -71,7 +107,7 @@ function AddToCart() {
                     <div
                       className="cursor-pointer text-xl font-bold text-zinc-700 hover:text-red-500"
                       onClick={(e) => {
-                          (CartItem.quantity>1) && decreaseProductQuantity();
+                        CartItem.quantity > 1 && decreaseProductQuantity();
                       }}
                     >
                       -
@@ -80,7 +116,7 @@ function AddToCart() {
                     <div
                       className="cursor-pointer text-xl font-bold text-zinc-700 hover:text-green-500"
                       onClick={(e) => {
-                         (CartItem.quantity<8) &&  UpdateInCart();
+                        CartItem.quantity < 8 && UpdateInCart();
                       }}
                     >
                       +
@@ -89,11 +125,9 @@ function AddToCart() {
                   <div>
                     <p
                       className="bg-red-500 hover:bg-red-600 text-white cursor-pointer rounded-lg px-4 py-2 font-medium transition"
-                      onClick={() =>
-                        setCartItems(
-                          CartItems.filter((item) => CartItem.id !== item.id),
-                        )
-                      }
+                      onClick={() => {
+                        DeleteInCart();
+                      }}
                     >
                       Delete
                     </p>

@@ -58,12 +58,16 @@ function Body() {
                           "Content-Type":"application/json",
                         },
                         body:JSON.stringify({
-                         _id:product._id
+                         _id:product._id 
                         })
                       })
-                      const resp1=await fetch("http://localhost:3000/api/getCartProducts")
-                      const data1=await resp1.json();
-                      setCartItems(data1.CartProducts);
+                      const data=await resp.json();
+
+                      setCartItems((prev) => {
+                         return prev.map((element) => {
+                           return ( product._id===data.UpdatedProducts._id? {...element,quantity:data.UpdatedProducts.quantity,total:data.UpdatedProducts.total}: element); 
+                          })
+                      })
             }
 
           return (

@@ -10,6 +10,7 @@ const getCartProducts = async (req, res) => {
 
 }
 const addCartProduct = async (req, res) => {
+    const g = req.body
 
     try {
         console.log(req.body)
@@ -27,13 +28,15 @@ const addCartProduct = async (req, res) => {
             quantity: 1,
             total: req.body.price
         })
-        res.json({
-            addedProduct: addedProduct
+        res.status(200).json({
+            addedProduct: addedProduct,
+            success:true
         })
         console.log(addedProduct)
 
     } catch (err) {
         console.log("adding product to cart (server)" + err)
+        
     }
 }
 
@@ -87,12 +90,10 @@ const DeleteCartProduct=async (req,res)=>{
             res.json({
                 deletedItem:deleted
             })
-
+            
     }catch(err){
-
-
-
+        console.log("Server Error while deleting product:"+err)
     }
 
 }
-module.exports = { getCartProducts, addCartProduct, UpdateCartProduct,decreaseQuantity,DeleteCartProduct}
+module.exports = { getCartProducts, addCartProduct, UpdateCartProduct, decreaseQuantity, DeleteCartProduct}
